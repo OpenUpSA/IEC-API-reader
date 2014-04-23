@@ -52,7 +52,7 @@ function apiQuery(senderRes, next, controller, params) {
 				return next(new restify.InternalError("Received no data from the IEC"));
 			}
 			var result = JSON.parse(data);
-			// console.log(result);
+			console.log(result);
 			senderRes.json(result);
 			next();
 		});
@@ -60,7 +60,7 @@ function apiQuery(senderRes, next, controller, params) {
 }
 
 function eventLookup(req, res, next) {
-	result = apiQuery(res, next, "ElectoralEvent");
+	result = apiQuery(res, next, "ElectoralEvent", { ElectoralEventTypeID: req.params.id });
 }
 
 function idLookup(req, res, next) {
@@ -72,15 +72,15 @@ function idLookupFull(req, res, next) {
 }
 
 function parties(req, res, next) {
-	result = apiQuery(res, next, "ContestingParties", { ElectoralEventID: 1 });
+	result = apiQuery(res, next, "ContestingParties", { ElectoralEventID: req.params.id });
 }
 
 function ballotResults(req, res, next) {
-	result = apiQuery(res, next, "GetNPEBallotResults", { ElectoralEventID: 1 });
+	result = apiQuery(res, next, "NPEBallotResults", { ElectoralEventID: req.params.id });
 }
 
 function seatAllocation(req, res, next) {
-	result = apiQuery(res, next, "GetNPESeatAllocationResults", { ElectoralEventID: 2, PartyID: 52 });
+	result = apiQuery(res, next, "NPESeatAllocationResults", { ElectoralEventID: req.params.id, PartyID: req.params.party_id });
 }
 //Set up server
 var server = restify.createServer();
@@ -89,12 +89,12 @@ server.use(restify.queryParser());
 
 // Routes
 server.get('/events', eventLookup);
-// server.get('/events/:id', eventLookup);
+server.get('/events/:id', eventLookup);
 server.get('/id/:id', idLookup);
 server.get('/id/full/:id', idLookupFull);
-server.get('/parties', parties);		//Not working at the moment
-server.get('/results', ballotResults); 	//Not working at the moment
-server.get('/seats', seatAllocation);  	//Not working at the moment
+server.get('/parties/:id', parties);
+server.get('/results/:id', ballotResults);
+server.get('/seats/:id/:party_id', seatAllocation);
 
 //Listen for incoming connections
 server.listen(config.port, function() {
