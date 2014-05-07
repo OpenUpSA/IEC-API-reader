@@ -116,7 +116,7 @@ function elecResult(req, res, next) {
 }
 
 function latest(req, res, next) {
-	req.params.NumberOfVDs = 5;
+	req.params.NumberOfVDs = 50;
 	apiQuery(res, next, "LatestResultsIn", req.params);
 // https://api.elections.org.za/api/v1/Latest ResultsIn?ElectoralEventID={ElectoralEvent ID}&NumberOfVDs={NumberOfVDs}
 }
