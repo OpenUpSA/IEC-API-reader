@@ -114,6 +114,12 @@ function seatAllocation(req, res, next) {
 function elecResult(req, res, next) {
 	result = apiQuery(res, next, "NPEBallotResults", req.params);
 }
+
+function latest(req, res, next) {
+	req.params.NumberOfVDs = 5;
+	apiQuery(res, next, "LatestResultsIn", req.params);
+// https://api.elections.org.za/api/v1/Latest ResultsIn?ElectoralEventID={ElectoralEvent ID}&NumberOfVDs={NumberOfVDs}
+}
 //Set up server
 var server = restify.createServer();
 server.use(restify.CORS());
@@ -131,12 +137,16 @@ server.get('/results/:id/province/:province_id/municipality/:municipality_id', b
 server.get('/result/:ElectoralEventID', elecResult);
 server.get('/result/:ElectoralEventID/province/:ProvinceID', elecResult);
 server.get('/result/:ElectoralEventID/province/:ProvinceID/municipality/:MunicipalityID', elecResult);
+server.get('/result/:ElectoralEventID/municipality/:MunicipalityID', elecResult);
 server.get('/result/:ElectoralEventID/province/:ProvinceID/municipality/:MunicipalityID/ward/:WardID', elecResult);
+server.get('/result/:ElectoralEventID/province/:ProvinceID/municipality/:MunicipalityID/voting_district/:VDNumber', elecResult);
+server.get('/result/:ElectoralEventID/voting_district/:VDNumber', elecResult);
 server.get('/delimination/:ElectoralEventID', delimination);
 server.get('/delimination/:ElectoralEventID/province/:ProvinceID', delimination);
 server.get('/delimination/:ElectoralEventID/province/:ProvinceID/municipality/:MunicipalityID', delimination);
 server.get('/delimination/:ElectoralEventID/province/:ProvinceID/municipality/:MunicipalityID/ward/:WardID', delimination);
 server.get('/seats/:id/:province_id', seatAllocation);
+server.get('/latest/:ElectoralEventID', latest);
 
 //Listen for incoming connections
 server.listen(config.port, function() {
