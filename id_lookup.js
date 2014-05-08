@@ -116,7 +116,7 @@ function elecResult(req, res, next) {
 }
 
 function latest(req, res, next) {
-	req.params.NumberOfVDs = 50;
+	req.params.NumberOfVDs = 15;
 	apiQuery(res, next, "LatestResultsIn", req.params);
 // https://api.elections.org.za/api/v1/Latest ResultsIn?ElectoralEventID={ElectoralEvent ID}&NumberOfVDs={NumberOfVDs}
 }
@@ -140,6 +140,7 @@ server.get('/result/:ElectoralEventID/province/:ProvinceID/municipality/:Municip
 server.get('/result/:ElectoralEventID/municipality/:MunicipalityID', elecResult);
 server.get('/result/:ElectoralEventID/province/:ProvinceID/municipality/:MunicipalityID/ward/:WardID', elecResult);
 server.get('/result/:ElectoralEventID/province/:ProvinceID/municipality/:MunicipalityID/voting_district/:VDNumber', elecResult);
+server.get('/result/:ElectoralEventID/province/:ProvinceID/voting_district/:VDNumber', elecResult);
 server.get('/result/:ElectoralEventID/voting_district/:VDNumber', elecResult);
 server.get('/delimination/:ElectoralEventID', delimination);
 server.get('/delimination/:ElectoralEventID/province/:ProvinceID', delimination);
